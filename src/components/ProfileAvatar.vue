@@ -1,0 +1,22 @@
+<script setup lang="ts">
+const { name } = defineProps<{ name: string }>();
+</script>
+<template>
+  <div class="profile-avatar">
+    <img src="/avatar.png" class="profile-avatar__image" alt="Logo" />
+    <div>
+      Привіт, <strong>{{ name }}</strong>
+    </div>
+  </div>
+</template>
+<style scoped>
+.profile-avatar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  font-size: 18px;
+}
+.profile-avatar__image {
+  width: 80px;
+}
+</style>
