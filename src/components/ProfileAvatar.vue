@@ -22,6 +22,7 @@ onMounted(() => {
   flex-direction: column;
   gap: 24px;
   font-size: 18px;
+  margin-bottom: 40px;
 }
 .profile-avatar__image {
   width: 80px;
