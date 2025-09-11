@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import ButtonMain from '@/components/ButtonMain.vue';
-import { useRouter } from 'vue-router';
+import InputString from '@/components/InputString.vue';
+import { useAuthStore } from '@/stores/auth.store';
+import { ref } from 'vue';
 
-const router = useRouter();
+const form = ref<{ email?: string; password?: string }>({});
+const authStore = useAuthStore();
 
-function redirectToMain() {
-  router.push({
-    name: 'main',
-  });
+function onSubmit(event: Event) {
+  event.preventDefault();
+  if (!form.value.email || !form.value.password) {
+    return;
+  }
+  authStore.login(form.value.email, form.value.password);
+  form.value = {};
 }
 </script>
 
@@ -15,7 +21,12 @@ function redirectToMain() {
   <div class="auth">
     <div class="auth__form">
       <h1 class="auth__header">Bookmarkly</h1>
-      <ButtonMain @click="redirectToMain()">Вхід</ButtonMain>
+      <form class="auth__form" @submit="onSubmit">
+        <InputString v-model="form.email" placeholder="Email" />
+        <InputString v-model="form.password" placeholder="Пароль" type="password" />
+        <ButtonMain type="submit">Вхід</ButtonMain>
+        {{ authStore.token }}
+      </form>
     </div>
   </div>
 </template>
@@ -27,7 +38,7 @@ function redirectToMain() {
   min-height: 100vh;
 }
 .auth__header {
-  font-size: 32px;
+  font-size: 52px;
   font-weight: bold;
 }
 .auth__form {
