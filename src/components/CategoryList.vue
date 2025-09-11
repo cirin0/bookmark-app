@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { userCategoryStore } from '@/stores/categories.store';
+import { useCategoryStore } from '@/stores/categories.store';
 import { onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import ButtonIcon from './ButtonIcon.vue';
 import IconPlus from '../icons/IconPlus.vue';
 
-const store = userCategoryStore();
+const store = useCategoryStore();
 
 onMounted(() => {
   store.fetchCategories();

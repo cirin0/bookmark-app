@@ -1,10 +1,10 @@
 import { API_ROUTES, http } from '@/api';
-import type { Category } from '@/interfaces/category.inteface';
+import type { Category } from '@/interfaces/category.interface';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
-export const userCategoryStore = defineStore('categories', () => {
+export const useCategoryStore = defineStore('categories', () => {
   const categories = ref<Category[]>([]);
 
   async function fetchCategories() {
@@ -20,5 +20,12 @@ export const userCategoryStore = defineStore('categories', () => {
     categories.value.push(data);
   }
 
-  return { categories, fetchCategories, createCategory };
+  function getCategoryByAlias(alias: string | string[]) {
+    if (typeof alias == 'string') {
+      return categories.value.find((c) => c.alias == alias);
+    }
+    return;
+  }
+
+  return { categories, fetchCategories, createCategory, getCategoryByAlias };
 });
