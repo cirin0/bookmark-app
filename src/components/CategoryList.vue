@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { useCategoryStore } from '@/stores/categories.store';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import ButtonIcon from './ButtonIcon.vue';
 import IconPlus from '../icons/IconPlus.vue';
 import { useAuthStore } from '@/stores/auth.store';
+import InputString from './InputString.vue';
 
 const store = useCategoryStore();
 const authStore = useAuthStore();
 const router = useRouter();
+const isCreate = ref<boolean>(false);
+const newCategoryName = ref<string>('');
 
 onMounted(() => {
   store.fetchCategories();
@@ -17,6 +20,21 @@ onMounted(() => {
 function logout() {
   authStore.clearToken();
   router.push({ name: 'auth' });
+}
+
+function toggleCreate() {
+  isCreate.value = !isCreate.value;
+  newCategoryName.value = '';
+}
+
+function createCategory() {
+  if (!newCategoryName.value) {
+    return;
+  }
+  store.createCategory(newCategoryName.value);
+  setTimeout(() => {
+    toggleCreate();
+  }, 100);
 }
 </script>
 <template>
@@ -27,7 +45,13 @@ function logout() {
       }}</RouterLink>
     </li>
     <li>
-      <ButtonIcon @click="store.createCategory">
+      <div class="category-create" v-if="isCreate">
+        <InputString v-model="newCategoryName" />
+        <ButtonIcon @click="createCategory">
+          <IconPlus />
+        </ButtonIcon>
+      </div>
+      <ButtonIcon v-if="!isCreate" @click="toggleCreate">
         <IconPlus />
       </ButtonIcon>
     </li>
@@ -41,6 +65,10 @@ function logout() {
   display: flex;
   flex-direction: column;
   gap: 34px;
+}
+.category-create {
+  display: flex;
+  gap: 10px;
 }
 .list-item {
   list-style: none;
