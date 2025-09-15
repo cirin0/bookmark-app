@@ -56,7 +56,7 @@ watch(
   margin-top: 30px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(10, 350px);
+  grid-template-rows: repeat(3, 350px);
   gap: 24px;
 }
 </style>
