@@ -9,7 +9,7 @@ import { useCategoryStore } from '@/stores/categories.store';
 import { useRouter } from 'vue-router';
 
 const { category } = defineProps<{ category: Category }>();
-const isEdited = ref<boolean>();
+const isEdited = ref<boolean>(false);
 const newCategoryName = ref<string>(category.name);
 const categoryStore = useCategoryStore();
 const router = useRouter();

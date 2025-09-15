@@ -12,9 +12,9 @@ export const useCategoryStore = defineStore('categories', () => {
     categories.value = data;
   }
 
-  async function createCategory() {
+  async function createCategory(name: string) {
     const { data } = await client().post<Category>(API_ROUTES.categories, {
-      name: 'Нова категорія',
+      name: name,
       alias: uuidv4(),
     });
     categories.value.push(data);
