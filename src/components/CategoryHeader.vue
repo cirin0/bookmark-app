@@ -2,7 +2,7 @@
 import type { Category } from '@/interfaces/category.interface';
 import ButtonIcon from './ButtonIcon.vue';
 import IconEdit from '@/icons/IconEdit.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import InputString from './InputString.vue';
 import IconTrash from '@/icons/IconTrash.vue';
 import { useCategoryStore } from '@/stores/categories.store';
@@ -13,6 +13,14 @@ const isEdited = ref<boolean>(false);
 const newCategoryName = ref<string>(category.name);
 const categoryStore = useCategoryStore();
 const router = useRouter();
+
+watch(
+  () => category.name,
+  (newName) => {
+    newCategoryName.value = newName;
+    isEdited.value = false;
+  },
+);
 
 function toggleEdit() {
   isEdited.value = !isEdited.value;
@@ -35,7 +43,7 @@ function deleteCategory() {
   <div class="category-header">
     <h1 v-if="!isEdited">{{ category.name }}</h1>
     <div v-if="isEdited" class="category-header__edit">
-      <InputString v-model="newCategoryName" />
+      <InputString v-model="newCategoryName" is-focused />
       <ButtonIcon @click="updateCategory">
         <IconEdit />
       </ButtonIcon>

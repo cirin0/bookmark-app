@@ -46,7 +46,7 @@ function createCategory() {
     </li>
     <li>
       <div class="category-create" v-if="isCreate">
-        <InputString v-model="newCategoryName" />
+        <InputString v-model="newCategoryName" is-focused />
         <ButtonIcon @click="createCategory">
           <IconPlus />
         </ButtonIcon>
