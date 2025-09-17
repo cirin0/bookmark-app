@@ -1,17 +1,38 @@
 <script setup lang="ts">
 import { useCategoryStore } from '@/stores/categories.store';
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import ButtonIcon from './ButtonIcon.vue';
 import IconPlus from '../icons/IconPlus.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import InputString from './InputString.vue';
+import IconOk from '@/icons/IconOk.vue';
 
 const store = useCategoryStore();
 const authStore = useAuthStore();
 const router = useRouter();
 const isCreate = ref<boolean>(false);
-const newCategoryName = ref<string>('');
+const newCategoryName = ref<string>();
+
+watch(isCreate, (newValue) => {
+  if (newValue) {
+    setTimeout(() => {
+      document.addEventListener('click', handleClickOutside);
+    }, 0);
+  } else {
+    document.removeEventListener('click', handleClickOutside);
+  }
+});
+
+function handleClickOutside(event: Event) {
+  const target = event.target as HTMLElement;
+  const createForm = document.querySelector('.category-create');
+  const plusButton = document.querySelector('.category-list li:nth-last-child(2) button');
+
+  if (createForm && !createForm.contains(target) && !plusButton?.contains(target)) {
+    isCreate.value = false;
+  }
+}
 
 onMounted(() => {
   store.fetchCategories();
@@ -22,9 +43,12 @@ function logout() {
   router.push({ name: 'auth' });
 }
 
-function toggleCreate() {
+async function toggleCreate() {
   isCreate.value = !isCreate.value;
-  newCategoryName.value = '';
+  if (isCreate.value) {
+    newCategoryName.value = '';
+    await nextTick();
+  }
 }
 
 function createCategory() {
@@ -48,7 +72,7 @@ function createCategory() {
       <div class="category-create" v-if="isCreate">
         <InputString v-model="newCategoryName" is-focused />
         <ButtonIcon @click="createCategory">
-          <IconPlus />
+          <IconOk />
         </ButtonIcon>
       </div>
       <ButtonIcon v-if="!isCreate" @click="toggleCreate">
@@ -69,6 +93,7 @@ function createCategory() {
 .category-create {
   display: flex;
   gap: 10px;
+  transition: 0.3s ease-in-out;
 }
 .list-item {
   list-style: none;
